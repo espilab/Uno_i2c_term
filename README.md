@@ -7,6 +7,9 @@ I2C device access tool for Arduino Uno.
 - (3) Using terminal software, connect the virtual COM port of the Arduino, set speed as 115200bps.
 - (4) Hit enter key and wait ">" prompt. "?" shows help menu.
 
+## note.
+As for I2C send(write) of Arduino Uno, default max data length is 32 bytes at once.
+
 (screen example)
 
 ![screen image](2025-04-29=15_57_34-COM14-TeraTermVT.png)
