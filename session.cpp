@@ -9,17 +9,17 @@
 #define CMDLINE_BUFSIZE 40
 #define I2C_BUFSIZE 64
 
-UCHAR	CMDLINE[CMDLINE_BUFSIZE];
-UCHAR 	TARGET_ADR;
-UINT	RD_CNT;
-UINT	WR_CNT;
-UCHAR	I2C_RD_BUF[I2C_BUFSIZE];
-UCHAR	I2C_WR_BUF[I2C_BUFSIZE];
+uint8_t	CMDLINE[CMDLINE_BUFSIZE];
+uint8_t 	TARGET_ADR;
+uint16_t	RD_CNT;
+uint16_t	WR_CNT;
+uint8_t	I2C_RD_BUF[I2C_BUFSIZE];
+uint8_t	I2C_WR_BUF[I2C_BUFSIZE];
 
 
 /* hex string to int (up to 4digit)*/
-UINT hex2val(UCHAR *str){
-  UINT ret,m,p;
+uint16_t hex2val(uint8_t *str){
+  uint16_t ret,m,p;
   p=0;
   ret=0;
   while ((str[p]!=0)&&(p<5)){ p++; }
@@ -37,7 +37,7 @@ UINT hex2val(UCHAR *str){
   return ret;
 }
 /* int to hex string (up to 4digit)*/
-void hexstr(UINT val, char *str){
+void hexstr(uint16_t val, char *str){
   char *hextbl="0123456789ABCDEF?";
   str[0] = hextbl[val >> 12];
   str[1] = hextbl[(val >> 8) & 0x000f];
@@ -66,11 +66,11 @@ void show_help()
 /*   loop in this function until enter key pressed
      return: string length
 */
-SHORT cmd_line(UCHAR *cmdlineptr){
-	UCHAR cin;
-	USHORT len;
+int8_t cmd_line(uint8_t *cmdlineptr){
+	uint8_t cin;
+	uint8_t len;
 	bool enterkey;
-	USHORT cptr = 0;
+	uint8_t cptr = 0;
 
 	enterkey = false;
 	while (!enterkey){
@@ -113,11 +113,11 @@ SHORT cmd_line(UCHAR *cmdlineptr){
 }
 
 /* decode and process command */
-void process_command(UCHAR *cmdline, SHORT len){
-	UINT adr,j;
+void process_command(uint8_t *cmdline, int8_t len){
+	uint16_t adr,j;
 	char str[8];
 	bool quit;
-	UCHAR data;
+	uint8_t data;
   int stat;
 
 
@@ -131,7 +131,7 @@ void process_command(UCHAR *cmdline, SHORT len){
 			while (cmd_line(CMDLINE) < 0)
 				;
 			adr = hex2val(CMDLINE);
-			TARGET_ADR = (UCHAR)adr;
+			TARGET_ADR = (uint8_t)adr;
 			hexstr(TARGET_ADR, str);
 			Serial.print("adr=0x");	Serial.println(&str[2]);
 			break;
@@ -139,7 +139,7 @@ void process_command(UCHAR *cmdline, SHORT len){
 			Serial.print("Enter count(bytes) to read(hex):");
 			while (cmd_line(CMDLINE) < 0)
 				;
-			data = (UCHAR)hex2val(CMDLINE);
+			data = (uint8_t)hex2val(CMDLINE);
 			if (data <= I2C_BUFSIZE){
 				RD_CNT = data;
 				hexstr(RD_CNT, str);
@@ -216,7 +216,7 @@ void process_command(UCHAR *cmdline, SHORT len){
 				if (CMDLINE[0] == '.'){
 					break;
 				} else {
-					data = (UCHAR)hex2val(CMDLINE);
+					data = (uint8_t)hex2val(CMDLINE);
 					I2C_WR_BUF[j++] = data;
 				}
 				if (j >= I2C_BUFSIZE){	break;	}
@@ -240,7 +240,7 @@ void process_command(UCHAR *cmdline, SHORT len){
 }
 /* Session --- loop infinite here */
 void session(){
-	SHORT len;
+	int8_t len;
 	TARGET_ADR = 0x70; 	/* defualt uC */
 	
 	while (1){
@@ -253,7 +253,7 @@ void session(){
 
 void init_session(void){
 	const char *cp PROGMEM =
-	  "-----\r\nI2C device access tool ver 1.0  2018-8-16 by Sakamoto";
+	  "-----\r\nI2C device access tool ver 1.1  2025-12-25 by Sakamoto";
 	Serial.println(cp);
 
 	session();

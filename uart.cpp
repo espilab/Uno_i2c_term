@@ -11,22 +11,21 @@ void init_uart(){
   Serial.begin(UART_BPS);
 }
 
-
-int uart_sendchar(UCHAR c){
+void uart_sendchar(uint8_t c){
   Serial.print((char)c);
 }
 
 /* get a received char from receive buffer */
-bool uart_getchar(UCHAR *c){
+bool uart_getchar(uint8_t *c){
   bool f;
   f = false;
   if (Serial.available() > 0){
     f = true;
-    *c = (UCHAR)(Serial.read());
+    *c = (uint8_t)(Serial.read());
   } 
   return f;
 }
 
-int recv_len(){
+int8_t recv_len(){
 	return Serial.available();
 }

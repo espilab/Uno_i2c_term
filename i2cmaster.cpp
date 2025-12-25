@@ -12,8 +12,8 @@ void init_i2c(){
 
 
 // i2c write
-int i2c_write(UCHAR adr, UCHAR *data, USHORT len){
-  int j,ret;
+uint8_t i2c_write(uint8_t adr, uint8_t *data, int8_t len){
+  uint8_t j,ret;
   Wire.beginTransmission((uint8_t)adr);
   for (j=0; j<len; j++){
     Wire.write(data[j]);
@@ -30,10 +30,10 @@ int i2c_write(UCHAR adr, UCHAR *data, USHORT len){
 }
 
 // i2c read
-int i2c_read(UCHAR adr, UCHAR *data, USHORT len){
-  int j,ret;
+uint8_t i2c_read(uint8_t adr, uint8_t *data, int8_t len){
+  uint8_t j,ret;
   j = 0;
-  ret = Wire.requestFrom(adr, len);
+  ret = Wire.requestFrom((int)adr, (int)len);
   while (Wire.available()){
     char c = Wire.read();
     data[j] = c;
@@ -43,16 +43,17 @@ int i2c_read(UCHAR adr, UCHAR *data, USHORT len){
 }
 
 // i2c stop condition
-void i2c_stopCond(){
-  byte ret;
+uint8_t i2c_stopCond(){
+  uint8_t ret;
   ret = Wire.endTransmission(true);
   Serial.print("endTransmission, result=");  Serial.println(ret);
+  return ret;
 }
 
 
 // i2c list all address
 void i2c_deviceList(){
-  UCHAR adr, data[2],ret;
+  uint8_t adr, data[2],ret;
 
   char *cp PROGMEM =
     "x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 xA xB xC xD xE xF\r\n"
